@@ -1,23 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import Hero from "./components/Hero";
+import Header from "./components/Header";
+import useLocalStorage from "use-local-storage";
 
 function App() {
+  const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
+  function switchTheme() {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={"min-h-screen w-full bg-gradient-to-b from-cyan-600 to-blue-400 "+ theme}>
+      <Header theme={theme} switchTheme={switchTheme}/>
+      <Hero />
     </div>
   );
 }
