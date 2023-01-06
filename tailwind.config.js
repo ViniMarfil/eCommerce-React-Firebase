@@ -8,7 +8,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'hero': "url('./img/hero3.jpg')",
+      }
+    },
     fontFamily: {
       'sans': ['Lato', ...defaultTheme.fontFamily.sans],
       'montserrat': ['Montserrat', 'Lato', ...defaultTheme.fontFamily.sans]

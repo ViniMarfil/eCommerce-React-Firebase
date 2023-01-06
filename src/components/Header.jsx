@@ -2,20 +2,23 @@ import { RiSearchLine } from "react-icons/ri";
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { VscAccount } from "react-icons/vsc";
-import { IoIosArrowDropdown } from "react-icons/io";
+import {CartContext} from "../contexts/CartContext";
 
-import React from "react";
+import React, { useContext } from "react";
 import DarkMode from "./DarkMode";
 import Logo from "./Logo";
+import { Link } from "react-router-dom";
 
 const Header = ({ theme, switchTheme }) => {
+  const {getItemQuantity} = useContext(CartContext);
+
   return (
-    <header className="relative z-10 bg-slate-300 py-2 px-8 text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4">
+    <header className="relative z-10 bg-slate-300 py-2 px-8 
+    text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4">
       <div className=" flex items-center justify-between ">
         <Logo />
         <SearchBar />
-        <Icons />
-        {/*<IconsMobile />*/}
+        <Icons getItemQuantity={getItemQuantity}/>
         <div className="absolute right-1 top-1">
           <DarkMode theme={theme} switchTheme={switchTheme} />
         </div>
@@ -55,12 +58,13 @@ const MobileSearchBar = () => {
   );
 };
 
-const Icons = () => {
+const Icons = ({getItemQuantity}) => {
+
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
-      <a
-        href="#"
+      <Link
+        to=""
         className="relative flex flex-col items-center justify-center transition hover:text-orange-600 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl ">
@@ -72,10 +76,10 @@ const Icons = () => {
         <span className="absolute right-2 top-[-4px] flex h-4 w-4 items-center justify-center rounded-full bg-orange-600 text-xs font-semibold text-white md:right-1 md:h-5 md:w-5">
           0
         </span>
-      </a>
+      </Link>
       {/*Cart */}
-      <a
-        href="#"
+      <Link
+        to=""
         className="relative flex flex-col items-center justify-center  transition hover:text-orange-500 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl ">
@@ -85,12 +89,12 @@ const Icons = () => {
           Cart
         </div>
         <span className="absolute  right-[-8px] top-[-4px] flex h-4 w-4 items-center justify-center  rounded-full bg-orange-600 text-xs font-semibold text-white md:h-5 md:w-5">
-          0
+          {getItemQuantity()}
         </span>
-      </a>
+      </Link>
       {/*Account */}
-      <a
-        href="#"
+      <Link
+        to="#"
         className="relative flex flex-col items-center justify-center  transition hover:text-orange-500 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl">
@@ -99,7 +103,7 @@ const Icons = () => {
         <div className="whitespace-nowrap text-xs leading-3 md:text-sm">
           Account
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

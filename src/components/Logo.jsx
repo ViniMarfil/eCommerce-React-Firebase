@@ -1,9 +1,10 @@
 import React from "react";
-import logo from "../Images/LogoViniVini3.png";
+import { Link } from "react-router-dom";
+
 
 const Logo = () => {
   return (
-    <a href="#">
+    <Link to="/">
       <div className="flex flex-col items-center justify-center cursor-pointer select-none">
         <h1 className=" whitespace-nowrap tracking-widest font-montserrat text-3xl font-bold leading-none dark:text-slate-200">
           VINIVINI
@@ -12,7 +13,7 @@ const Logo = () => {
           STORE
         </h3>
       </div>
-    </a>
+    </Link>
   );
 };
 
