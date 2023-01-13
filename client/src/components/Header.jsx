@@ -94,7 +94,7 @@ const Icons = ({getItemQuantity}) => {
       </Link>
       {/*Account */}
       <Link
-        to="#"
+        to="/account"
         className="relative flex flex-col items-center justify-center  transition hover:text-orange-500 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl">
