@@ -6,8 +6,6 @@ import { UserContext } from "../contexts/UserContext";
 function AccountPage() {
   const { user } = useContext(UserContext);
 
-  console.log(user);
-
   if (user) {
     return <AccountSettings />;
   }

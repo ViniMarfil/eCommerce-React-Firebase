@@ -6,12 +6,26 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, provider } from "../api/firebase";
+import { writeBatch, doc, addDoc, collection } from "firebase/firestore";
+import { auth, provider, db } from "../api/firebase";
+import { DUMMY_DATA } from "../data/DUMMY_DATA";
 
 export const UserContext = createContext(null);
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState();
+
+  /*
+  async function isUserAdmin() {
+    const coll = collection(db, "admins");
+    const filteredQuery = query(coll, where('userId', '==', user.uid));
+
+    const snapshot = await getCountFromServer(filteredQuery);
+    const count = snapshot.data().count;
+    return  count > 0 ? true : false;
+    //console.log();
+  }
+  */
 
   async function createUser(email, password) {
     return await createUserWithEmailAndPassword(auth, email, password)
@@ -56,12 +70,6 @@ export function UserContextProvider({ children }) {
     return signOut(auth);
   }
 
-  /*
-  function getUser() {
-    return auth.currentUser ? auth.currentUser : null;
-  };
-  */
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -76,7 +84,7 @@ export function UserContextProvider({ children }) {
     signIn,
     signInWithGoogle,
     signOutUser,
-    user,
+    user
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;

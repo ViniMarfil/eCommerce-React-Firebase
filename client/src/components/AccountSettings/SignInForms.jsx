@@ -18,7 +18,7 @@ function SignInForms() {
 function SignInWithEmailForm() {
   const { signIn } = useContext(UserContext);
 
-  const [errorMessage, setErrorMessage] = useState("dasda");
+  const [errorMessage, setErrorMessage] = useState("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
