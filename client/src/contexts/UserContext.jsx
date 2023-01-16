@@ -14,7 +14,7 @@ export const UserContext = createContext(null);
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState();
-
+  
   /*
   async function isUserAdmin() {
     const coll = collection(db, "admins");
