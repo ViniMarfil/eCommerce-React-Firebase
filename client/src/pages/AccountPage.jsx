@@ -6,11 +6,7 @@ import { UserContext } from "../contexts/UserContext";
 function AccountPage() {
   const { user } = useContext(UserContext);
 
-  if (user) {
-    return <AccountSettings />;
-  }
-
-  return <SignInForms />;
+  return user ? <AccountSettings /> : <SignInForms />;
 }
 
 export default AccountPage;
