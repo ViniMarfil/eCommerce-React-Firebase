@@ -7,13 +7,13 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, provider, db } from "../api/firebase";
-import {collection, getDocs, query, where} from "firebase/firestore"
+import { collection, getDoc, query, where, doc } from "firebase/firestore";
 
 export const UserContext = createContext(null);
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState();
-  
+
   /*
   async function isUserAdmin() {
     const coll = collection(db, "admins");
@@ -25,8 +25,6 @@ export function UserContextProvider({ children }) {
     //console.log();
   }
   */
-
-  
 
   async function createUser(email, password) {
     return await createUserWithEmailAndPassword(auth, email, password)
@@ -71,14 +69,19 @@ export function UserContextProvider({ children }) {
     return signOut(auth);
   }
 
-
-  async function getProduct(id){
-    console.log("The typed id is: "+id)
-
-    const q = query(collection(db, "products"), where("price", "==", "64"));
-      const data = await getDocs(q);
-      console.log(data.docs);
-      
+  async function getProduct(id) {
+    try {
+      const docRef = doc(db, "products", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        return { success: true, data: docSnap.data() };
+      } else {
+        return { success: false };
+      }
+    } catch (error) {
+      console.log({ error });
+      return { success: false };
+    }
   }
 
   useEffect(() => {
@@ -96,7 +99,7 @@ export function UserContextProvider({ children }) {
     signInWithGoogle,
     signOutUser,
     user,
-    getProduct
+    getProduct,
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;

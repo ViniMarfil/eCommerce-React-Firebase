@@ -11,7 +11,7 @@ const Product = ({ id, title, price, description, image, rating }) => {
       <div className="relative flex h-full w-full flex-col items-center justify-center">
         <div className="group absolute flex h-full w-full flex-row items-center justify-center transition hover:bg-slate-600/40">
           <ProductButton>
-            <Link to={`/product/:${id}`}><RiSearchLine/> </Link>
+            <Link to={`/product/${id}`}><RiSearchLine/> </Link>
           </ProductButton>
 
           <ProductButton>

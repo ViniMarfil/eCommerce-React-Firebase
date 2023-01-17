@@ -1,18 +1,31 @@
-import React, { useContext, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import UserContext from '../contexts/UserContext';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 function ProductPage() {
-  const {id} = useParams();
-  const {getProduct} = useContext(UserContext);
+  const { id } = useParams();
+  const { getProduct } = useContext(UserContext);
+
+  const [product, setProduct] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getProduct(id);
-  }, [])
-  
+    async function getProductThenSet() {
+      setIsLoading(true);
+      const result = await getProduct(id);
+      result.success ? setProduct(result.data) : setProduct(null);
+      setIsLoading(false);
+    }
+    getProductThenSet();
+  }, [id, getProduct]);
+
   return (
-    <div>ProductPage {id}</div>
-  )
+    <>
+      {isLoading && <h1>LOADING...</h1>}
+      <button onClick={() => console.log(product)}>aa</button>
+      <div>ProductPage {id}</div>
+    </>
+  );
 }
 
-export default ProductPage
+export default ProductPage;
