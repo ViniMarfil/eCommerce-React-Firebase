@@ -6,9 +6,8 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { writeBatch, doc, addDoc, collection } from "firebase/firestore";
 import { auth, provider, db } from "../api/firebase";
-import { DUMMY_DATA } from "../data/DUMMY_DATA";
+import {collection, getDocs, query, where} from "firebase/firestore"
 
 export const UserContext = createContext(null);
 
@@ -26,6 +25,8 @@ export function UserContextProvider({ children }) {
     //console.log();
   }
   */
+
+  
 
   async function createUser(email, password) {
     return await createUserWithEmailAndPassword(auth, email, password)
@@ -70,6 +71,16 @@ export function UserContextProvider({ children }) {
     return signOut(auth);
   }
 
+
+  async function getProduct(id){
+    console.log("The typed id is: "+id)
+
+    const q = query(collection(db, "products"), where("price", "==", "64"));
+      const data = await getDocs(q);
+      console.log(data.docs);
+      
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -84,7 +95,8 @@ export function UserContextProvider({ children }) {
     signIn,
     signInWithGoogle,
     signOutUser,
-    user
+    user,
+    getProduct
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;

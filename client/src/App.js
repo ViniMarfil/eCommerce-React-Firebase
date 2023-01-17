@@ -11,7 +11,6 @@ import { Routes, Route } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
 import { db } from "./api/firebase";
 import { collection, getDocs, query, limit } from "firebase/firestore";
-import { DUMMY_DATA } from "./data/DUMMY_DATA";
 //Contexts
 import { CartContextProvider } from "./contexts/CartContext";
 import { UserContextProvider } from "./contexts/UserContext";

@@ -2,6 +2,7 @@ import React from "react";
 import { RiSearchLine } from "react-icons/ri";
 import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const Product = ({ id, title, price, description, image, rating }) => {
 
@@ -10,7 +11,7 @@ const Product = ({ id, title, price, description, image, rating }) => {
       <div className="relative flex h-full w-full flex-col items-center justify-center">
         <div className="group absolute flex h-full w-full flex-row items-center justify-center transition hover:bg-slate-600/40">
           <ProductButton>
-            <RiSearchLine onClick={()=>console.log("Clicked!")}/>
+            <Link to={`/product/:${id}`}><RiSearchLine/> </Link>
           </ProductButton>
 
           <ProductButton>
@@ -33,9 +34,7 @@ const Product = ({ id, title, price, description, image, rating }) => {
 
 const ProductButton = ({ children, onClick }) => {
   return (
-    <button className="invisible group-hover:visible m-2 rounded-full bg-slate-200 p-3 text-2xl text-slate-900 hover:bg-slate-300 active:bg-slate-400 hover:text-orange-500 active:text-orange-600 hover:shadow-xl
-      dark:bg-slate-400 dark:text-slate-200 dark:hover:bg-slate-500 dark:active:bg-slate-600 dark:hover:text-orange-500 dark:active:text-orange-600 dark:hover:shadow-xl"
-      onClick={onClick}>
+    <button className="invisible group-hover:visible m-2 rounded-full bg-slate-200 p-3 text-2xl text-slate-900 hover:bg-slate-300 active:bg-slate-400 hover:text-orange-500 active:text-orange-600 hover:shadow-xl dark:bg-slate-400 dark:text-slate-200 dark:hover:bg-slate-500 dark:active:bg-slate-600 dark:hover:text-orange-500 dark:active:text-orange-600 dark:hover:shadow-xl" onClick={onClick}>
       {children}
     </button>
   );
