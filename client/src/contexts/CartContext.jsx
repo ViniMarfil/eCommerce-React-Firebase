@@ -1,4 +1,14 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import UserContext from "./UserContext";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+} from "firebase/firestore";
+import { db } from "../api/firebase";
 
 const DUMMY_CART = {
   id: 1,
@@ -8,7 +18,36 @@ const DUMMY_CART = {
 export const CartContext = createContext(null);
 
 export function CartContextProvider({ children }) {
+  const { user } = useContext(UserContext);
+
   const [cart, setCart] = useState([DUMMY_CART]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    let currentCart = [];
+
+    async function getCartProducts() {
+      const q = query(
+        collection(db, "cart-products"),
+        where("userId", "==", user.uid)
+      );
+
+      const docSnap = await getDocs(q);
+
+      docSnap.forEach((doc) => {
+        
+        console.log(doc.id, " => ", doc.data());
+      });
+    }
+
+    try {
+      getCartProducts();
+    } catch (error) {
+      console.log({ error });
+    }
+  }, [user]);
 
   function addItem(newItem) {
     let newCart = [...cart, newItem];
@@ -21,23 +60,19 @@ export function CartContextProvider({ children }) {
     setCart(newCart);
   }
 
-  function getCart(){
+  function getCart() {
     return cart;
   }
 
-  function getItemQuantity(){
+  function getItemQuantity() {
     let currentQuantity = 0;
-    cart.forEach(item => currentQuantity += item.quantity);
+    cart.forEach((item) => (currentQuantity += item.quantity));
 
     return currentQuantity;
   }
 
-  const value = {
-    addItem,
-    removeItem,
-    getCart,
-    getItemQuantity
-  };
+  const value = { addItem, removeItem, getCart, getItemQuantity };
+
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 

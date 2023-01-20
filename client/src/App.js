@@ -1,20 +1,14 @@
-//Components
-import Header from "./components/Header";
-import MainPage from "./pages/MainPage";
-import Footer from "./components/Footer";
-import ProductPage from "./pages/ProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import NotFoundPage from "./pages/NotFoundPage";
-import AccountPage from "./pages/AccountPage";
+import {Header, Footer} from "./components"
+import {MainPage, ProductPage, CheckoutPage, NotFoundPage, AccountPage} from "./pages"
 //Misc
 import { Routes, Route } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
 import { db } from "./api/firebase";
 import { collection, getDocs, query, limit } from "firebase/firestore";
+import { useState, useEffect } from "react";
 //Contexts
 import { CartContextProvider } from "./contexts/CartContext";
 import { UserContextProvider } from "./contexts/UserContext";
-import { useState, useEffect } from "react";
 
 function App() {
   const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
