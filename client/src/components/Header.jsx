@@ -1,24 +1,28 @@
+import React, { useContext } from "react";
 import { RiSearchLine } from "react-icons/ri";
-import { FaRegHeart } from "react-icons/fa";
+import {HiOutlineHeart} from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import { VscAccount } from "react-icons/vsc";
-import {CartContext} from "../contexts/CartContext";
 
-import React, { useContext } from "react";
-import DarkMode from "./DarkMode";
-import Logo from "./Logo";
+import CartContext from "../contexts/CartContext";
+
+import { DarkMode, Logo } from "./";
 import { Link } from "react-router-dom";
+import  WishlistContext  from "../contexts/WishlistContext";
 
 const Header = ({ theme, switchTheme }) => {
-  const {getItemQuantity} = useContext(CartContext);
+  const { getItemQuantity } = useContext(CartContext);
+  const { wishlist } = useContext(WishlistContext);
 
   return (
-    <header className="relative z-10 bg-slate-300 py-2 px-8 
-    text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4">
+    <header
+      className="relative z-10 bg-slate-300 py-2 px-8 
+    text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4"
+    >
       <div className=" flex items-center justify-between ">
         <Logo />
         <SearchBar />
-        <Icons getItemQuantity={getItemQuantity}/>
+        <Icons getItemQuantity={getItemQuantity} getWishlistQuantity={()=> wishlist.length} />
         <div className="absolute right-1 top-1">
           <DarkMode theme={theme} switchTheme={switchTheme} />
         </div>
@@ -45,7 +49,7 @@ const SearchBar = () => {
 
 const MobileSearchBar = () => {
   return (
-    <div className="relative flex w-full max-w-xl m-auto md:hidden">
+    <div className="relative m-auto flex w-full max-w-xl md:hidden">
       <input
         type="text"
         className="mt-2 w-full rounded-l-lg border border-r-0 border-slate-500 p-2 font-medium focus:outline-none dark:border-transparent dark:text-slate-800"
@@ -58,8 +62,7 @@ const MobileSearchBar = () => {
   );
 };
 
-const Icons = ({getItemQuantity}) => {
-
+const Icons = ({ getItemQuantity, getWishlistQuantity }) => {
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
@@ -68,13 +71,13 @@ const Icons = ({getItemQuantity}) => {
         className="relative flex flex-col items-center justify-center transition hover:text-orange-600 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl ">
-          <FaRegHeart />
+          <HiOutlineHeart/>
         </div>
         <div className="whitespace-nowrap text-xs leading-3 md:text-sm">
           Wish List
         </div>
         <span className="absolute right-2 top-[-4px] flex h-4 w-4 items-center justify-center rounded-full bg-orange-600 text-xs font-semibold text-white md:right-1 md:h-5 md:w-5">
-          0
+          {getWishlistQuantity()}
         </span>
       </Link>
       {/*Cart */}
@@ -107,15 +110,5 @@ const Icons = ({getItemQuantity}) => {
     </div>
   );
 };
-
-/*
-const IconsMobile = () => {
-  return (
-    <button className="mr-2 flex items-center justify-center text-4xl transition hover:text-orange-500 active:text-orange-700 active:transition-none sm:hidden">
-      <IoIosArrowDropdown />
-    </button>
-  );
-};
-*/
 
 export default Header;

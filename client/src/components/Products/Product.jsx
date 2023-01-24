@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
+import {HiHeart, HiOutlineHeart} from "react-icons/hi";
 import { RiSearchLine } from "react-icons/ri";
-import { FaRegHeart } from "react-icons/fa";
+//import { FaRegHeart } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import WishlistContext from "../../contexts/WishlistContext";
+
 
 const Product = ({ id, title, price, description, image }) => {
+
+  const {isProductInWishlist, addOrRemoveWishlistItem} = useContext(WishlistContext);
+
   return (
     <div className="mb-4 h-80 min-w-[16rem] overflow-hidden rounded-lg border bg-white shadow-slate-900 hover:shadow-md dark:shadow-slate-100/20">
       <div className="relative z-20 flex h-[80%] w-full flex-col items-center justify-center">
@@ -24,10 +30,9 @@ const Product = ({ id, title, price, description, image }) => {
               <RiSearchLine />
             </ProductButton>
           </Link>
-          <ProductButton>
-            <FaRegHeart />
+          <ProductButton onClick={()=>addOrRemoveWishlistItem(id)}>
+            {isProductInWishlist(id) ? <HiHeart/> : <HiOutlineHeart/>}
           </ProductButton>
-
           <ProductButton>
             <FiShoppingCart />
           </ProductButton>

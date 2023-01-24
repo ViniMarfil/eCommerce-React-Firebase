@@ -7,24 +7,21 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, provider, db } from "../api/firebase";
-import { collection, getDoc, query, where, doc } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  addDoc
+} from "firebase/firestore";
+import { RiPictureInPictureLine } from "react-icons/ri";
 
 export const UserContext = createContext(null);
 
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState();
-
-  /*
-  async function isUserAdmin() {
-    const coll = collection(db, "admins");
-    const filteredQuery = query(coll, where('userId', '==', user.uid));
-
-    const snapshot = await getCountFromServer(filteredQuery);
-    const count = snapshot.data().count;
-    return  count > 0 ? true : false;
-    //console.log();
-  }
-  */
 
   async function createUser(email, password) {
     return await createUserWithEmailAndPassword(auth, email, password)
@@ -39,7 +36,6 @@ export function UserContextProvider({ children }) {
         return { success: false, message: errorMessage };
       });
   }
-
   async function signIn(email, password) {
     return await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -68,7 +64,7 @@ export function UserContextProvider({ children }) {
   function signOutUser() {
     return signOut(auth);
   }
-
+  
   async function getProduct(id) {
     try {
       const docRef = doc(db, "products", id);
@@ -100,7 +96,7 @@ export function UserContextProvider({ children }) {
     signInWithGoogle,
     signOutUser,
     user,
-    getProduct,
+    getProduct
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;

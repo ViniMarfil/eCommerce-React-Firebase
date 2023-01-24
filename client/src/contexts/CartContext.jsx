@@ -22,6 +22,7 @@ export function CartContextProvider({ children }) {
 
   const [cart, setCart] = useState([DUMMY_CART]);
 
+  /*
   useEffect(() => {
     if (!user) {
       return;
@@ -48,7 +49,7 @@ export function CartContextProvider({ children }) {
       console.log({ error });
     }
   }, [user]);
-
+  */
   function addItem(newItem) {
     let newCart = [...cart, newItem];
     setCart(newCart);

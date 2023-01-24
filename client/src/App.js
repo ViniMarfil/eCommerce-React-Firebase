@@ -1,5 +1,11 @@
-import {Header, Footer} from "./components"
-import {MainPage, ProductPage, CheckoutPage, NotFoundPage, AccountPage} from "./pages"
+import { Header, Footer } from "./components";
+import {
+  MainPage,
+  ProductPage,
+  CheckoutPage,
+  NotFoundPage,
+  AccountPage,
+} from "./pages";
 //Misc
 import { Routes, Route } from "react-router-dom";
 import useLocalStorage from "use-local-storage";
@@ -9,6 +15,7 @@ import { useState, useEffect } from "react";
 //Contexts
 import { CartContextProvider } from "./contexts/CartContext";
 import { UserContextProvider } from "./contexts/UserContext";
+import { WishlistContextProvider } from "./contexts/WishlistContext";
 
 function App() {
   const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
@@ -24,7 +31,9 @@ function App() {
     const getPopularProducts = async () => {
       const q = query(collection(db, "products"), limit(15));
       const data = await getDocs(q);
-      setPopularProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setPopularProducts(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
     };
 
     getPopularProducts();
@@ -32,24 +41,29 @@ function App() {
 
   return (
     <UserContextProvider>
-      <CartContextProvider>
-        <div
-          className={
-            "min-h-screen w-full bg-gradient-to-b from-cyan-600 to-blue-400 " +
-            theme
-          }
-        >
-          <Header theme={theme} switchTheme={switchTheme} />
-          <Routes>
-            <Route path="/" element={<MainPage products={popularProducts} />} />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-          <Footer />
-        </div>
-      </CartContextProvider>
+      <WishlistContextProvider>
+        <CartContextProvider>
+          <div
+            className={
+              "min-h-screen w-full bg-gradient-to-b from-cyan-600 to-blue-400 " +
+              theme
+            }
+          >
+            <Header theme={theme} switchTheme={switchTheme} />
+            <Routes>
+              <Route
+                path="/"
+                element={<MainPage products={popularProducts} />}
+              />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+            <Footer />
+          </div>
+        </CartContextProvider>
+      </WishlistContextProvider>
     </UserContextProvider>
   );
 }
