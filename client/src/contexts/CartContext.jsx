@@ -7,6 +7,9 @@ import {
   query,
   where,
   doc,
+  onSnapshot,
+  addDoc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 
@@ -19,50 +22,59 @@ export const CartContext = createContext(null);
 
 export function CartContextProvider({ children }) {
   const { user } = useContext(UserContext);
+  const [cart, setCart] = useState([]);
 
-  const [cart, setCart] = useState([DUMMY_CART]);
-
-  /*
+  //Snapshot subscription
   useEffect(() => {
     if (!user) {
       return;
     }
-    let currentCart = [];
+    const q = query(collection(db, "cart"), where("userId", "==", user.uid));
 
-    async function getCartProducts() {
-      const q = query(
-        collection(db, "cart-products"),
-        where("userId", "==", user.uid)
-      );
-
-      const docSnap = await getDocs(q);
-
-      docSnap.forEach((doc) => {
-        
-        console.log(doc.id, " => ", doc.data());
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let cartArrays = [];
+      querySnapshot.forEach((doc) => {
+        cartArrays.push({ ...doc.data(), id: doc.id });
       });
+      setCart(cartArrays);
+    });
+    return () => unsubscribe();
+  }, [user]);
+
+  async function addItem(itemId, quantity) {
+    if (!user || quantity === 0) {
+      return;
     }
 
+    var item = cart.find((item) => item.productId === itemId);
     try {
-      getCartProducts();
+      if (!item) {
+        await addDoc(collection(db, "cart"), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: quantity,
+        });
+        return;
+      } else {
+        let newQuantity = item.quantity + quantity;
+        console.log(item);
+        await setDoc(doc(db, "cart", item.id), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: newQuantity
+        });
+      }
     } catch (error) {
       console.log({ error });
     }
-  }, [user]);
-  */
-  function addItem(newItem) {
-    let newCart = [...cart, newItem];
-    setCart(newCart);
   }
 
   function removeItem(id) {
+    return;
+    //TODO
     let newCart = cart.filter((item) => item.id !== id);
     console.log(cart);
     setCart(newCart);
-  }
-
-  function getCart() {
-    return cart;
   }
 
   function getItemQuantity() {
@@ -72,7 +84,7 @@ export function CartContextProvider({ children }) {
     return currentQuantity;
   }
 
-  const value = { addItem, removeItem, getCart, getItemQuantity };
+  const value = { addItem, removeItem, getItemQuantity };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

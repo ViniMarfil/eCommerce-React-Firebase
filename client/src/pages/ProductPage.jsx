@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CartContext from "../contexts/CartContext";
 import UserContext from "../contexts/UserContext";
 import WishlistContext from "../contexts/WishlistContext";
 
@@ -8,10 +9,11 @@ function ProductPage() {
   const { getProduct } = useContext(UserContext);
   const { isProductInWishlist, addOrRemoveWishlistItem } =
     useContext(WishlistContext);
+  const { addItem } = useContext(CartContext);
 
-  //Fetching product data
   const [product, setProduct] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
     async function getProductDetails() {
@@ -22,9 +24,6 @@ function ProductPage() {
     }
     getProductDetails();
   }, []);
-
-  //Quantity logic
-  const [quantity, setQuantity] = useState(0);
 
   function changeQuantity(amount) {
     let currentQuantity = quantity + amount;
@@ -48,7 +47,7 @@ function ProductPage() {
             src={product.image}
             alt={product.title}
           />
-          <div className="flex flex-col items-center mt-2 md:items-start md:px-20 ">
+          <div className="mt-2 flex flex-col items-center md:items-start md:px-20 ">
             <h1 className="mb-10 block items-center text-3xl">
               {product.title}
             </h1>
@@ -78,6 +77,10 @@ function ProductPage() {
               <button
                 className="text-md my-1 mr-4 w-full whitespace-nowrap break-keep rounded bg-orange-600 px-8 py-3 text-white
                shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
+                onClick={() => {
+                  addItem(id, quantity);
+                  setQuantity(0);
+                }}
               >
                 Add to cart
               </button>
