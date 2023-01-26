@@ -20,6 +20,7 @@ export function CartContextProvider({ children }) {
   //Snapshot subscription
   useEffect(() => {
     if (!user) {
+      setCart([]);
       return;
     }
     const q = query(collection(db, "cart"), where("userId", "==", user.uid));

@@ -12,6 +12,7 @@ export function WishlistContextProvider({ children }) {
   //Snapshot subscription
   useEffect(() => {
     if (!user) {
+      setWishlist([]);
       return;
     }
     const q = query(
