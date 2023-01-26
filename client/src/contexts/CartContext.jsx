@@ -2,8 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import UserContext from "./UserContext";
 import {
   collection,
-  getDoc,
-  getDocs,
   query,
   where,
   doc,
@@ -12,11 +10,6 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
-
-const DUMMY_CART = {
-  id: 1,
-  quantity: 2,
-};
 
 export const CartContext = createContext(null);
 

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getProduct } from "../api/utils/Products";
 import CartContext from "../contexts/CartContext";
 import UserContext from "../contexts/UserContext";
 import WishlistContext from "../contexts/WishlistContext";
 
 function ProductPage() {
   const { id } = useParams();
-  const { getProduct } = useContext(UserContext);
   const { isProductInWishlist, addOrRemoveWishlistItem } =
     useContext(WishlistContext);
   const { addItem } = useContext(CartContext);
@@ -27,13 +27,9 @@ function ProductPage() {
 
   function changeQuantity(amount) {
     let currentQuantity = quantity + amount;
-    if (currentQuantity < 0) {
-      currentQuantity = 0;
-    }
 
-    if (currentQuantity > 9) {
-      currentQuantity = 9;
-    }
+    if (currentQuantity < 0) currentQuantity = 0; 
+    if (currentQuantity > 9) currentQuantity = 9;
 
     setQuantity(currentQuantity);
   }

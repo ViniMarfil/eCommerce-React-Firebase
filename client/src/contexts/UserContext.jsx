@@ -6,17 +6,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, provider, db } from "../api/firebase";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  doc,
-  addDoc
-} from "firebase/firestore";
-import { RiPictureInPictureLine } from "react-icons/ri";
+import { auth, provider } from "../api/firebase";
 
 export const UserContext = createContext(null);
 
@@ -64,21 +54,6 @@ export function UserContextProvider({ children }) {
   function signOutUser() {
     return signOut(auth);
   }
-  
-  async function getProduct(id) {
-    try {
-      const docRef = doc(db, "products", id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        return { success: true, data: docSnap.data() };
-      } else {
-        return { success: false };
-      }
-    } catch (error) {
-      console.log({ error });
-      return { success: false };
-    }
-  }
 
   //Get user
   useEffect(() => {
@@ -95,8 +70,7 @@ export function UserContextProvider({ children }) {
     signIn,
     signInWithGoogle,
     signOutUser,
-    user,
-    getProduct
+    user
   };
 
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;
