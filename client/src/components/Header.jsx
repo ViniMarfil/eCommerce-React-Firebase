@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import  WishlistContext  from "../contexts/WishlistContext";
 
 const Header = ({ theme, switchTheme }) => {
-  const { getItemQuantity } = useContext(CartContext);
+  const { getItemQuantity, setIsCartActiveHandler } = useContext(CartContext);
   const { wishlist } = useContext(WishlistContext);
 
   return (
@@ -22,7 +22,7 @@ const Header = ({ theme, switchTheme }) => {
       <div className=" flex items-center justify-between ">
         <Logo />
         <SearchBar />
-        <Icons getItemQuantity={getItemQuantity} getWishlistQuantity={()=> wishlist.length} />
+        <Icons getItemQuantity={getItemQuantity} getWishlistQuantity={()=> wishlist.length} setIsCartActiveHandler={setIsCartActiveHandler}/>
         <div className="absolute right-1 top-1">
           <DarkMode theme={theme} switchTheme={switchTheme} />
         </div>
@@ -62,7 +62,7 @@ const MobileSearchBar = () => {
   );
 };
 
-const Icons = ({ getItemQuantity, getWishlistQuantity }) => {
+const Icons = ({ getItemQuantity, getWishlistQuantity, setIsCartActiveHandler }) => {
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
@@ -81,9 +81,9 @@ const Icons = ({ getItemQuantity, getWishlistQuantity }) => {
         </span>
       </Link>
       {/*Cart */}
-      <Link
-        to=""
+      <button
         className="relative flex flex-col items-center justify-center  transition hover:text-orange-500 active:text-orange-700 active:transition-none"
+        onClick={()=>setIsCartActiveHandler(true)}
       >
         <div className="text-2xl ">
           <FiShoppingCart />
@@ -94,7 +94,7 @@ const Icons = ({ getItemQuantity, getWishlistQuantity }) => {
         <span className="absolute  right-[-8px] top-[-4px] flex h-4 w-4 items-center justify-center  rounded-full bg-orange-600 text-xs font-semibold text-white md:h-5 md:w-5">
           {getItemQuantity()}
         </span>
-      </Link>
+      </button>
       {/*Account */}
       <Link
         to="/account"

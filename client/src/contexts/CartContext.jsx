@@ -16,6 +16,7 @@ export const CartContext = createContext(null);
 export function CartContextProvider({ children }) {
   const { user } = useContext(UserContext);
   const [cart, setCart] = useState([]);
+  const [isCartDrawerActive, setIsCartDrawerActive] = useState(true);
 
   //Snapshot subscription
   useEffect(() => {
@@ -55,7 +56,7 @@ export function CartContextProvider({ children }) {
         await setDoc(doc(db, "cart", item.id), {
           userId: user.uid,
           productId: itemId,
-          quantity: newQuantity
+          quantity: newQuantity,
         });
       }
     } catch (error) {
@@ -78,9 +79,33 @@ export function CartContextProvider({ children }) {
     return currentQuantity;
   }
 
-  const value = { addItem, removeItem, getItemQuantity };
+  function setIsCartActiveHandler(newValue){
+    setIsCartDrawerActive(newValue)
+  }
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  const cartDrawer = (
+   <div className={"fixed right-0 top-0 w-80 h-screen bg-slate-600 z-40 transition-transform overflow-y-auto"+(isCartDrawerActive ? " translate-x-0 " : " translate-x-full")}>
+      <h1 className="">Cart items</h1>
+      <button onClick={()=>setIsCartActiveHandler(false)}>Close cart</button>
+   </div>
+  );
+  const darkBackground = (
+    <div className="fixed top-0 bg-slate-900/40 w-screen h-screen z-20" onClick={()=>setIsCartActiveHandler(false)}>
+
+    </div>
+  )
+
+  const value = { addItem, removeItem, getItemQuantity, cart, setIsCartActiveHandler };
+
+  return (
+    <CartContext.Provider value={value}>
+      <>
+        {isCartDrawerActive && darkBackground}
+        {cartDrawer}        
+        {children}
+      </>
+    </CartContext.Provider>
+  );
 }
 
 export default CartContext;
