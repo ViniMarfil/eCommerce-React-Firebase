@@ -8,6 +8,8 @@ import {
   onSnapshot,
   addDoc,
   setDoc,
+  documentId,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 
@@ -25,16 +27,103 @@ export function CartContextProvider({ children }) {
       return;
     }
     const q = query(collection(db, "cart"), where("userId", "==", user.uid));
-
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let cartArrays = [];
-      querySnapshot.forEach((doc) => {
-        cartArrays.push({ ...doc.data(), id: doc.id });
-      });
-      setCart(cartArrays);
+    const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+      //The cart doc only stores the productId, userId and quantity, it has no info about the price or name of the product.
+      // So we need to:
+      //1st - Get the cart from firebase
+      //2nd - Get the products based on the productsId
+      //3rd - Sort then merge both docs
+      const firebaseCart = await getFirebaseCart(querySnapshot);
+      const firebaseProducts = await getProductsFromCart(firebaseCart);
+      const finalCart = mergeCartAndProduct(firebaseCart, firebaseProducts);
+      setCart(finalCart);
     });
     return () => unsubscribe();
   }, [user]);
+
+  async function getFirebaseCart(querySnapshot) {
+    let firebaseCart = [];
+    querySnapshot.forEach((doc) => {
+      firebaseCart.push({ ...doc.data(), id: doc.id });
+    });
+    return firebaseCart;
+  }
+
+  async function getProductsFromCart(firebaseCart) {
+    if (firebaseCart.length === 0) return [];
+    let productCart = [];
+    let firebaseCartProductId = firebaseCart.map((item) => item.productId);
+    //Firebase limits only 10 arrays in the "in" condition, so we need to loop
+    do {
+      let first10ProductId = firebaseCartProductId.splice(0, 10);
+
+      let q = query(
+        collection(db, "products"),
+        where(documentId(), "in", first10ProductId)
+      );
+
+      let querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc, index, array) => {
+        productCart.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+    } while (firebaseCartProductId.length > 0);
+    return productCart;
+  }
+
+  function mergeCartAndProduct(firebaseCart, firebaseProducts) {
+    //Note: both the args must be already ordered by productId
+    let { sortedFirebaseCart, sortedFirebaseProducts } = sortBothCarts(
+      firebaseCart,
+      firebaseProducts
+    );
+
+    let finalCart = sortedFirebaseCart;
+    sortedFirebaseProducts.forEach((product, i) => {
+      finalCart[i] = {
+        image: product.image,
+        price: product.price,
+        title: product.title,
+        ...finalCart[i],
+      };
+    });
+
+    return finalCart;
+  }
+
+  function sortBothCarts(firebaseCart, firebaseProducts) {
+    firebaseCart.sort(function (a, b) {
+      const nameA = a.productId; // ignore upper and lowercase
+      const nameB = b.productId;
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    firebaseProducts.sort(function (a, b) {
+      const nameA = a.id.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.id.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return {
+      sortedFirebaseCart: firebaseCart,
+      sortedFirebaseProducts: firebaseProducts,
+    };
+  }
 
   async function addItem(itemId, quantity) {
     if (!user || quantity === 0) {
@@ -42,25 +131,21 @@ export function CartContextProvider({ children }) {
     }
 
     var item = cart.find((item) => item.productId === itemId);
-    try {
-      if (!item) {
-        await addDoc(collection(db, "cart"), {
-          userId: user.uid,
-          productId: itemId,
-          quantity: quantity,
-        });
-        return;
-      } else {
-        let newQuantity = item.quantity + quantity;
-        console.log(item);
-        await setDoc(doc(db, "cart", item.id), {
-          userId: user.uid,
-          productId: itemId,
-          quantity: newQuantity,
-        });
-      }
-    } catch (error) {
-      console.log({ error });
+
+    if (item) {
+      const newQuantity = item.quantity + quantity;
+      await setDoc(doc(db, "cart", item.id), {
+        userId: user.uid,
+        productId: itemId,
+        quantity: newQuantity,
+      });
+    } else {
+      const docRef = await addDoc(collection(db, "cart"), {
+        userId: user.uid,
+        productId: itemId,
+        quantity: quantity,
+      });
+      console.log("Document written with ID: ", docRef.id);
     }
   }
 
@@ -79,33 +164,20 @@ export function CartContextProvider({ children }) {
     return currentQuantity;
   }
 
-  function setIsCartActiveHandler(newValue){
-    setIsCartDrawerActive(newValue)
+  function setIsCartActiveHandler(newValue) {
+    setIsCartDrawerActive(newValue);
   }
 
-  const cartDrawer = (
-   <div className={"fixed right-0 top-0 w-80 h-screen bg-slate-600 z-40 transition-transform overflow-y-auto"+(isCartDrawerActive ? " translate-x-0 " : " translate-x-full")}>
-      <h1 className="">Cart items</h1>
-      <button onClick={()=>setIsCartActiveHandler(false)}>Close cart</button>
-   </div>
-  );
-  const darkBackground = (
-    <div className="fixed top-0 bg-slate-900/40 w-screen h-screen z-20" onClick={()=>setIsCartActiveHandler(false)}>
+  const value = {
+    addItem,
+    removeItem,
+    getItemQuantity,
+    cart,
+    isCartDrawerActive,
+    setIsCartActiveHandler,
+  };
 
-    </div>
-  )
-
-  const value = { addItem, removeItem, getItemQuantity, cart, setIsCartActiveHandler };
-
-  return (
-    <CartContext.Provider value={value}>
-      <>
-        {isCartDrawerActive && darkBackground}
-        {cartDrawer}        
-        {children}
-      </>
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export default CartContext;

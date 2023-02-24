@@ -8,6 +8,7 @@ import WishlistContext from "../../contexts/WishlistContext";
 import CartContext from "../../contexts/CartContext";
 
 const Product = ({ id, title, price, description, image }) => {
+
   const { isProductInWishlist, addOrRemoveWishlistItem } =
     useContext(WishlistContext);
   const { addItem } = useContext(CartContext);

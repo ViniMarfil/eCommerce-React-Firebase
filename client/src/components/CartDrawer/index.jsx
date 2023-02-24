@@ -1,17 +1,49 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CartContext from "../../contexts/CartContext";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import CartDrawerItem from "./CartDrawerItem";
+import { getProduct } from "../../api/utils/Products";
 
 function CartDrawer() {
   const { cart, isCartDrawerActive, setIsCartActiveHandler } =
     useContext(CartContext);
 
-    console.log(cart);
+    //console.log("cart in cartdrawer:", cart);
   const background = (
     <div
       className="fixed top-0 z-20 h-screen w-screen bg-slate-900/40"
       onClick={() => setIsCartActiveHandler(false)}
     ></div>
+  );
+
+  const cartIsNotNull = (
+    <>
+      <ul className="mt-8 flex flex-col p-4 dark:text-slate-200">
+        {cart.map((cartItem) => {
+          //console.log(cartItem);
+          return (
+            <CartDrawerItem
+              key={cartItem.id}
+              id={cartItem.id}
+              productId={cartItem.productId}
+              image={cartItem.image}
+              title={cartItem.title}
+              price={cartItem.price}
+              quantity={cartItem.quantity}
+            />
+          );
+        })}
+      </ul>
+      <div className="flex">
+        <button
+          className="text-md m-4 w-full rounded bg-orange-600 px-8 py-3 text-white
+         shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
+          onClick={() => console.log("Clicked!")}
+        >
+          Go to checkout
+        </button>
+      </div>
+    </>
   );
 
   return (
@@ -29,9 +61,7 @@ function CartDrawer() {
         >
           <AiOutlineCloseCircle />
         </button>
-        <div>
-          {cart.map(item => item.itemId)}
-        </div>
+        {cart.length === 0 ? <div>Nothing!</div> : cartIsNotNull}
       </div>
     </>
   );

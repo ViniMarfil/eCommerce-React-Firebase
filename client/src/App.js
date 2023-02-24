@@ -1,4 +1,4 @@
-import { Header, Footer } from "./components";
+import { Header, Footer, CartDrawer } from "./components";
 import {
   MainPage,
   ProductPage,
@@ -50,6 +50,7 @@ function App() {
             }
           >
             <Header theme={theme} switchTheme={switchTheme} />
+            <CartDrawer/>
             <Routes>
               <Route
                 path="/"

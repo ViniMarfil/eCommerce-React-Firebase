@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { RiSearchLine } from "react-icons/ri";
-import {HiOutlineHeart} from "react-icons/hi";
+import { HiOutlineHeart } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import { VscAccount } from "react-icons/vsc";
 
@@ -8,7 +8,7 @@ import CartContext from "../contexts/CartContext";
 
 import { DarkMode, Logo } from "./";
 import { Link } from "react-router-dom";
-import  WishlistContext  from "../contexts/WishlistContext";
+import WishlistContext from "../contexts/WishlistContext";
 
 const Header = ({ theme, switchTheme }) => {
   const { getItemQuantity, setIsCartActiveHandler } = useContext(CartContext);
@@ -16,13 +16,17 @@ const Header = ({ theme, switchTheme }) => {
 
   return (
     <header
-      className="relative z-10 bg-slate-300 py-2 px-8 
+      className="fixed z-20 w-full bg-slate-300 py-2 px-8 
     text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4"
     >
       <div className=" flex items-center justify-between ">
         <Logo />
         <SearchBar />
-        <Icons getItemQuantity={getItemQuantity} getWishlistQuantity={()=> wishlist.length} setIsCartActiveHandler={setIsCartActiveHandler}/>
+        <Icons
+          getItemQuantity={getItemQuantity}
+          getWishlistQuantity={() => wishlist.length}
+          setIsCartActiveHandler={setIsCartActiveHandler}
+        />
         <div className="absolute right-1 top-1">
           <DarkMode theme={theme} switchTheme={switchTheme} />
         </div>
@@ -62,7 +66,11 @@ const MobileSearchBar = () => {
   );
 };
 
-const Icons = ({ getItemQuantity, getWishlistQuantity, setIsCartActiveHandler }) => {
+const Icons = ({
+  getItemQuantity,
+  getWishlistQuantity,
+  setIsCartActiveHandler,
+}) => {
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
@@ -71,7 +79,7 @@ const Icons = ({ getItemQuantity, getWishlistQuantity, setIsCartActiveHandler })
         className="relative flex flex-col items-center justify-center transition hover:text-orange-600 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl ">
-          <HiOutlineHeart/>
+          <HiOutlineHeart />
         </div>
         <div className="whitespace-nowrap text-xs leading-3 md:text-sm">
           Wish List
@@ -83,7 +91,7 @@ const Icons = ({ getItemQuantity, getWishlistQuantity, setIsCartActiveHandler })
       {/*Cart */}
       <button
         className="relative flex flex-col items-center justify-center  transition hover:text-orange-500 active:text-orange-700 active:transition-none"
-        onClick={()=>setIsCartActiveHandler(true)}
+        onClick={() => setIsCartActiveHandler(true)}
       >
         <div className="text-2xl ">
           <FiShoppingCart />

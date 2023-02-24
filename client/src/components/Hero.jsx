@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Hero = () => {
   return (
     <section
-      className="relative bg-hero  bg-cover bg-center bg-no-repeat text-slate-900"
+      className="relative bg-hero  bg-cover bg-center bg-no-repeat text-slate-900 pt-20"
     >
       <div className="absolute inset-0  backdrop-blur-[1px] bg-transparent bg-gradient-to-r from-slate-700/90 to-slate-600/10 bg-flip"></div>
 

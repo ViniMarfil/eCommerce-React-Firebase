@@ -7,3 +7,4 @@ export { default as Product } from "./Products/Product";
 export { default as ProductSection } from "./Products/ProductSection";
 export { default as AccountSettings } from "./AccountSettings/AccountSettings";
 export { default as SignInForms } from "./AccountSettings/SignInForms";
+export { default as CartDrawer } from "./CartDrawer";
