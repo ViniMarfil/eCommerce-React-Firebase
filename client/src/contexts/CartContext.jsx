@@ -18,6 +18,7 @@ export const CartContext = createContext(null);
 export function CartContextProvider({ children }) {
   const { user } = useContext(UserContext);
   const [cart, setCart] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const [isCartDrawerActive, setIsCartDrawerActive] = useState(true);
 
   //Snapshot subscription
@@ -125,13 +126,21 @@ export function CartContextProvider({ children }) {
     };
   }
 
+  /*
   async function addItem(itemId, quantity) {
     if (!user || quantity === 0) {
       return;
     }
 
+    if (isFetching){
+      console.log("It is still fetching! Wait a little longer.")
+      return;
+    }
+
     var item = cart.find((item) => item.productId === itemId);
 
+    console.log("Item with id "+ itemId+ " STARTED being added/updated. Time: " + Date.now());
+    setIsFetching(true);
     if (item) {
       const newQuantity = item.quantity + quantity;
       await setDoc(doc(db, "cart", item.id), {
@@ -140,12 +149,136 @@ export function CartContextProvider({ children }) {
         quantity: newQuantity,
       });
     } else {
-      const docRef = await addDoc(collection(db, "cart"), {
+      await addDoc(collection(db, "cart"), {
         userId: user.uid,
         productId: itemId,
         quantity: quantity,
       });
-      console.log("Document written with ID: ", docRef.id);
+    }
+    setIsFetching(false);
+    console.log("Item with id "+ itemId+ " STOPPED being added/updated. Time: " + Date.now());
+  }
+  */
+
+  /*
+  Known issue:
+  Sometimes, thanks to the fetch mechanism, it add a new item instead of updating a new.
+  It only breaks sometimes when clicking many times on different items.
+  */
+  /*
+  async function addItem(itemId, quantity) {
+    if (!user || quantity === 0) {
+      return;
+    }
+
+    if (isFetching) {
+      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
+      return;
+    }
+
+    var item = cart.find((item) => item.productId === itemId);
+
+    setIsFetching(true);
+    console.log("Started fetch");
+    try {
+      if (item) {
+        const newQuantity = item.quantity + quantity;
+        await setDoc(doc(db, "cart", item.id), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: newQuantity,
+        });
+      } else {
+        await addDoc(collection(db, "cart"), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: quantity,
+        });
+      }
+    } catch (e) {
+      console.warn("Adding item error: ", e);
+    } finally {
+      setIsFetching(false);
+      console.log("Ended fetch");
+    }
+  }
+  */
+
+  async function addItem(itemId, quantity) {
+    if (!user) {
+      return {
+        success: false,
+        message: "Please log in to add a item to your cart.",
+      };
+    }
+    if (quantity === 0) {
+      return { success: false, message: "Select a quantity first." };
+    }
+    if (isFetching) {
+      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
+      return { success: false, message: "Adding item..." };
+    }
+
+    var item = cart.find((item) => item.productId === itemId);
+
+    if (item) {
+      return { success: false, message: "Item already in the cart.", code: "alreadyInTheCard" };
+    }
+
+    setIsFetching(true);
+    try {
+      await addDoc(collection(db, "cart"), {
+        userId: user.uid,
+        productId: itemId,
+        quantity: quantity,
+      });
+    } catch (e) {
+      console.warn("Adding item error: ", e);
+    } finally {
+      setIsFetching(false);
+      return { success: true };
+    }
+  }
+
+  async function addOrUpdateItem(itemId, quantity) {
+    if (!user) {
+      return {
+        success: false,
+        message: "Please log in to add a item to your cart.",
+      };
+    }
+    if (quantity === 0) {
+      return { success: false, message: "Select a quantity first." };
+    }
+    if (isFetching) {
+      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
+      return { success: false, message: "Adding item..." };
+    }
+
+    var item = cart.find((item) => item.productId === itemId);
+
+    setIsFetching(true);
+    console.log("Started fetch");
+    try {
+      if (item) {
+        const newQuantity = item.quantity + quantity;
+        await setDoc(doc(db, "cart", item.id), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: newQuantity,
+        });
+      } else {
+        await addDoc(collection(db, "cart"), {
+          userId: user.uid,
+          productId: itemId,
+          quantity: quantity,
+        });
+      }
+    } catch (e) {
+      console.warn("Adding item error: ", e);
+    } finally {
+      setIsFetching(false);
+      console.log("Ended fetch");
     }
   }
 
@@ -170,6 +303,7 @@ export function CartContextProvider({ children }) {
 
   const value = {
     addItem,
+    addOrUpdateItem,
     removeItem,
     getItemQuantity,
     cart,
