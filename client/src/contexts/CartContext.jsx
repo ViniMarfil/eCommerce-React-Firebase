@@ -33,11 +33,17 @@ export function CartContextProvider({ children }) {
       // So we need to:
       //1st - Get the cart from firebase
       //2nd - Get the products based on the productsId
-      //3rd - Sort then merge both docs
+      //3rd - Deduplicate the items. Sometimes it happens, thanks to my terrible programming skills
+      //4th - Merge both cart and product
       const firebaseCart = await getFirebaseCart(querySnapshot);
       const firebaseProducts = await getProductsFromCart(firebaseCart);
-      const finalCart = mergeCartAndProduct(firebaseCart, firebaseProducts);
-      setCart(finalCart);
+      const fixedFirebaseCart = deduplicateMergeFirebaseCart(firebaseCart);
+      const fixedProducts = deduplicateMergeProducts(firebaseProducts);
+      const mergedCart = mergeCartAndProduct(
+        fixedFirebaseCart,
+        fixedProducts
+      );
+      setCart(mergedCart);
     });
     return () => unsubscribe();
   }, [user]);
@@ -75,26 +81,73 @@ export function CartContextProvider({ children }) {
     return productCart;
   }
 
-  function mergeCartAndProduct(firebaseCart, firebaseProducts) {
-    //Note: both the args must be already ordered by productId
-    let { sortedFirebaseCart, sortedFirebaseProducts } = sortBothCarts(
-      firebaseCart,
-      firebaseProducts
-    );
+  function deduplicateMergeFirebaseCart(firebaseCart) {
+    let fixedFirebaseProducts = [];
 
-    let finalCart = sortedFirebaseCart;
-    sortedFirebaseProducts.forEach((product, i) => {
-      finalCart[i] = {
-        image: product.image,
-        price: product.price,
-        title: product.title,
-        ...finalCart[i],
-      };
+    firebaseCart.forEach((item) => {
+      let duplicatedItemIndex = fixedFirebaseProducts.findIndex(
+        (e) => e.productId === item.productId
+      );
+
+      if (duplicatedItemIndex === -1) {
+        fixedFirebaseProducts.push(item);
+      } else {
+        let newQuantity =
+          fixedFirebaseProducts[duplicatedItemIndex].quantity + item.quantity;
+
+        fixedFirebaseProducts[duplicatedItemIndex] = {
+          ...fixedFirebaseProducts[duplicatedItemIndex],
+          quantity: newQuantity,
+        };
+      }
     });
 
-    return finalCart;
+    return fixedFirebaseProducts;
   }
 
+  function deduplicateMergeProducts(firebaseProducts) {
+    let fixedFirebaseProducts = [];
+
+    firebaseProducts.forEach((item) => {
+      let duplicatedItemIndex = fixedFirebaseProducts.findIndex(
+        (e) => e.id === item.id
+      );
+
+      if (duplicatedItemIndex === -1) {
+        fixedFirebaseProducts.push(item);
+      } else {
+        let newQuantity =
+          fixedFirebaseProducts[duplicatedItemIndex].quantity + item.quantity;
+
+        fixedFirebaseProducts[duplicatedItemIndex] = {
+          ...fixedFirebaseProducts[duplicatedItemIndex],
+          quantity: newQuantity,
+        };
+      }
+    });
+
+    return fixedFirebaseProducts;
+  }
+
+  function mergeCartAndProduct(firebaseCart, firebaseProducts) {
+    let mergedCart = [];
+    let foundCartItem;
+    firebaseProducts.forEach((productItem) => {
+      foundCartItem = firebaseCart.find(
+        (cartItem) => cartItem.productId === productItem.id
+      );
+      mergedCart.push({
+        image: productItem.image,
+        description: productItem.description,
+        price: productItem.price,
+        title: productItem.title,
+        ...foundCartItem,
+      });
+    });
+    return mergedCart;
+  }
+
+  /*
   function sortBothCarts(firebaseCart, firebaseProducts) {
     firebaseCart.sort(function (a, b) {
       const nameA = a.productId; // ignore upper and lowercase
@@ -125,135 +178,33 @@ export function CartContextProvider({ children }) {
       sortedFirebaseProducts: firebaseProducts,
     };
   }
-
-  /*
-  async function addItem(itemId, quantity) {
-    if (!user || quantity === 0) {
-      return;
-    }
-
-    if (isFetching){
-      console.log("It is still fetching! Wait a little longer.")
-      return;
-    }
-
-    var item = cart.find((item) => item.productId === itemId);
-
-    console.log("Item with id "+ itemId+ " STARTED being added/updated. Time: " + Date.now());
-    setIsFetching(true);
-    if (item) {
-      const newQuantity = item.quantity + quantity;
-      await setDoc(doc(db, "cart", item.id), {
-        userId: user.uid,
-        productId: itemId,
-        quantity: newQuantity,
-      });
-    } else {
-      await addDoc(collection(db, "cart"), {
-        userId: user.uid,
-        productId: itemId,
-        quantity: quantity,
-      });
-    }
-    setIsFetching(false);
-    console.log("Item with id "+ itemId+ " STOPPED being added/updated. Time: " + Date.now());
-  }
   */
+  function validateFetch(quantity) {
+    if (!user) {
+      return {
+        success: false,
+        message: "Please log in first.",
+      };
+    }
+    if (quantity === 0) {
+      return { success: false, message: "Select a quantity first." };
+    }
+    if (isFetching) {
+      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
+      return { success: false, message: "Working..." };
+    }
+  }
 
   /*
   Known issue:
   Sometimes, thanks to the fetch mechanism, it add a new item instead of updating a new.
   It only breaks sometimes when clicking many times on different items.
+  Gave up trying to make this work
+  Maybe the use of stores, useEffect or other library
+  For now I am deduplicating client side
   */
-  /*
   async function addItem(itemId, quantity) {
-    if (!user || quantity === 0) {
-      return;
-    }
-
-    if (isFetching) {
-      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
-      return;
-    }
-
-    var item = cart.find((item) => item.productId === itemId);
-
-    setIsFetching(true);
-    console.log("Started fetch");
-    try {
-      if (item) {
-        const newQuantity = item.quantity + quantity;
-        await setDoc(doc(db, "cart", item.id), {
-          userId: user.uid,
-          productId: itemId,
-          quantity: newQuantity,
-        });
-      } else {
-        await addDoc(collection(db, "cart"), {
-          userId: user.uid,
-          productId: itemId,
-          quantity: quantity,
-        });
-      }
-    } catch (e) {
-      console.warn("Adding item error: ", e);
-    } finally {
-      setIsFetching(false);
-      console.log("Ended fetch");
-    }
-  }
-  */
-
-  async function addItem(itemId, quantity) {
-    if (!user) {
-      return {
-        success: false,
-        message: "Please log in to add a item to your cart.",
-      };
-    }
-    if (quantity === 0) {
-      return { success: false, message: "Select a quantity first." };
-    }
-    if (isFetching) {
-      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
-      return { success: false, message: "Adding item..." };
-    }
-
-    var item = cart.find((item) => item.productId === itemId);
-
-    if (item) {
-      return { success: false, message: "Item already in the cart.", code: "alreadyInTheCard" };
-    }
-
-    setIsFetching(true);
-    try {
-      await addDoc(collection(db, "cart"), {
-        userId: user.uid,
-        productId: itemId,
-        quantity: quantity,
-      });
-    } catch (e) {
-      console.warn("Adding item error: ", e);
-    } finally {
-      setIsFetching(false);
-      return { success: true };
-    }
-  }
-
-  async function addOrUpdateItem(itemId, quantity) {
-    if (!user) {
-      return {
-        success: false,
-        message: "Please log in to add a item to your cart.",
-      };
-    }
-    if (quantity === 0) {
-      return { success: false, message: "Select a quantity first." };
-    }
-    if (isFetching) {
-      console.log("%cIt is still fetching! Wait a little longer.", "color:red");
-      return { success: false, message: "Adding item..." };
-    }
+    validateFetch(quantity);
 
     var item = cart.find((item) => item.productId === itemId);
 
@@ -303,7 +254,6 @@ export function CartContextProvider({ children }) {
 
   const value = {
     addItem,
-    addOrUpdateItem,
     removeItem,
     getItemQuantity,
     cart,
