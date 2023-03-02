@@ -11,9 +11,9 @@ import { Link } from "react-router-dom";
 import WishlistContext from "../contexts/WishlistContext";
 
 const Header = ({ theme, switchTheme }) => {
-  const { getItemQuantity, setIsCartActiveHandler } = useContext(CartContext);
+  const { cartQuantity, setIsCartActiveHandler } = useContext(CartContext);
   const { wishlist } = useContext(WishlistContext);
-
+  
   return (
     <header
       className="fixed z-20 w-full bg-slate-300 py-2 px-8 
@@ -23,7 +23,7 @@ const Header = ({ theme, switchTheme }) => {
         <Logo />
         <SearchBar />
         <Icons
-          getItemQuantity={getItemQuantity}
+          cartQuantity={cartQuantity}
           getWishlistQuantity={() => wishlist.length}
           setIsCartActiveHandler={setIsCartActiveHandler}
         />
@@ -67,10 +67,11 @@ const MobileSearchBar = () => {
 };
 
 const Icons = ({
-  getItemQuantity,
+  cartQuantity,
   getWishlistQuantity,
   setIsCartActiveHandler,
 }) => {
+
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
@@ -100,7 +101,7 @@ const Icons = ({
           Cart
         </div>
         <span className="absolute  right-[-8px] top-[-4px] flex h-4 w-4 items-center justify-center  rounded-full bg-orange-600 text-xs font-semibold text-white md:h-5 md:w-5">
-          {getItemQuantity()}
+          {cartQuantity}
         </span>
       </button>
       {/*Account */}

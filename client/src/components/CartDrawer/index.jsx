@@ -2,13 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import CartContext from "../../contexts/CartContext";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import CartDrawerItem from "./CartDrawerItem";
-import { getProduct } from "../../api/utils/Products";
 
 function CartDrawer() {
   const { cart, isCartDrawerActive, setIsCartActiveHandler } =
     useContext(CartContext);
-
-    //console.log("cart in cartdrawer:", cart);
   const background = (
     <div
       className="fixed top-0 z-20 h-screen w-screen bg-slate-900/40"
@@ -20,15 +17,10 @@ function CartDrawer() {
     <>
       <ul className="mt-8 flex flex-col p-4 dark:text-slate-200">
         {cart.map((cartItem) => {
-          //console.log(cartItem);
           return (
             <CartDrawerItem
-              key={cartItem.id}
-              id={cartItem.id}
+              key={cartItem.productId}
               productId={cartItem.productId}
-              image={cartItem.image}
-              title={cartItem.title}
-              price={cartItem.price}
               quantity={cartItem.quantity}
             />
           );
