@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import CartContext from "../../contexts/CartContext";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import CartDrawerItem from "./CartDrawerItem";
+import { Link } from "react-router-dom";
 
 function CartDrawer() {
   const { cart, isCartDrawerActive, setIsCartActiveHandler } =
@@ -11,6 +12,24 @@ function CartDrawer() {
       className="fixed top-0 z-20 h-screen w-screen bg-slate-900/40"
       onClick={() => setIsCartActiveHandler(false)}
     ></div>
+  );
+
+  const cartIsNull = (
+    <>
+      <div className="mt-8 flex flex-col items-center justify-center p-4 text-3xl dark:text-slate-200">
+        <div>Your cart is empty.</div>
+      </div>
+      <div className="flex items-center justify-center">
+        <Link
+          to=""
+          className=" text-md m-4 flex w-full items-center justify-center rounded bg-orange-600 px-8
+         py-3 text-white shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
+          onClick={() => setIsCartActiveHandler(false)}
+        >
+          <div> Back to shopping</div>
+        </Link>
+      </div>
+    </>
   );
 
   const cartIsNotNull = (
@@ -53,7 +72,7 @@ function CartDrawer() {
         >
           <AiOutlineCloseCircle />
         </button>
-        {cart.length === 0 ? <div>Nothing!</div> : cartIsNotNull}
+        {cart.length === 0 ? cartIsNull : cartIsNotNull}
       </div>
     </>
   );
