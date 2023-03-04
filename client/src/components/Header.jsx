@@ -13,10 +13,10 @@ import WishlistContext from "../contexts/WishlistContext";
 const Header = ({ theme, switchTheme }) => {
   const { cartQuantity, setIsCartActiveHandler } = useContext(CartContext);
   const { wishlist } = useContext(WishlistContext);
-  
+
   return (
     <header
-      className="fixed z-20 w-full bg-slate-300 py-2 px-8 
+      className="sticky top-0 z-20 w-full bg-slate-300 py-2 px-8 
     text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-200 md:py-4"
     >
       <div className=" flex items-center justify-between ">
@@ -71,12 +71,11 @@ const Icons = ({
   getWishlistQuantity,
   setIsCartActiveHandler,
 }) => {
-
   return (
     <div className="flex items-center justify-center space-x-2 md:space-x-4">
       {/*Wish List */}
       <Link
-        to=""
+        to="/wishlist"
         className="relative flex flex-col items-center justify-center transition hover:text-orange-600 active:text-orange-700 active:transition-none"
       >
         <div className="text-2xl ">

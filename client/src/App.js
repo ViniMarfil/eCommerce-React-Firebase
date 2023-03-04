@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { CartContextProvider } from "./contexts/CartContext";
 import { UserContextProvider } from "./contexts/UserContext";
 import { WishlistContextProvider } from "./contexts/WishlistContext";
+import WishlistPage from "./pages/WishlistPage";
 
 function App() {
   const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
@@ -59,6 +60,7 @@ function App() {
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/account" element={<AccountPage />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Footer />
