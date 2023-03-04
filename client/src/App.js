@@ -5,6 +5,7 @@ import {
   CheckoutPage,
   NotFoundPage,
   AccountPage,
+  WishlistPage,
 } from "./pages";
 //Misc
 import { Routes, Route } from "react-router-dom";
@@ -16,7 +17,6 @@ import { useState, useEffect } from "react";
 import { CartContextProvider } from "./contexts/CartContext";
 import { UserContextProvider } from "./contexts/UserContext";
 import { WishlistContextProvider } from "./contexts/WishlistContext";
-import WishlistPage from "./pages/WishlistPage";
 
 function App() {
   const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
@@ -51,7 +51,7 @@ function App() {
             }
           >
             <Header theme={theme} switchTheme={switchTheme} />
-            <CartDrawer/>
+            <CartDrawer />
             <Routes>
               <Route
                 path="/"

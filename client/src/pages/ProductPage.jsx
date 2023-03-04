@@ -23,8 +23,15 @@ function ProductPage() {
       setIsLoading(false);
     }
     getProductDetails();
+    
+  }, []);
+  
+  //Force scroll to top on render
+  useEffect(() => {
+    window.scrollTo(0,0);   
   }, []);
 
+  
   function changeQuantity(amount) {
     let currentQuantity = quantity + amount;
 

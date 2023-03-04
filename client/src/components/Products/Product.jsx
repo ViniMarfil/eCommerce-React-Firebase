@@ -8,7 +8,6 @@ import WishlistContext from "../../contexts/WishlistContext";
 import CartContext from "../../contexts/CartContext";
 
 const Product = ({ id, title, price, description, image }) => {
-
   const { isProductInWishlist, addOrRemoveWishlistItem } =
     useContext(WishlistContext);
   const { addItem } = useContext(CartContext);
@@ -16,7 +15,10 @@ const Product = ({ id, title, price, description, image }) => {
   return (
     <div className="mb-4 h-80 min-w-[16rem] overflow-hidden rounded-lg border bg-white shadow-slate-900 hover:shadow-md dark:shadow-slate-100/20">
       <div className="relative z-10 flex h-[80%] w-full flex-col items-center justify-center">
-        <Link to={`/product/${id}`} className="relative flex flex-col items-center justify-center h-full">
+        <Link
+          to={`/product/${id}`}
+          className="relative flex h-full flex-col items-center justify-center"
+        >
           <img
             className="mb-10 h-full bg-inherit object-contain transition hover:scale-105 "
             src={image}
