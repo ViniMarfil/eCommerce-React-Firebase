@@ -7,15 +7,19 @@ import {
 } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { db } from "../api/firebase";
+import { WishlistItem } from "../components";
+import CartContext from "../contexts/CartContext";
 import UserContext from "../contexts/UserContext";
 import WishlistContext from "../contexts/WishlistContext";
 
 function WishlistPage() {
   const { user } = useContext(UserContext);
-  const { wishlist } = useContext(WishlistContext);
+  const { addItem,  } = useContext(CartContext);
+  const { wishlist, addOrRemoveWishlistItem } = useContext(WishlistContext);
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(wishlistProducts);
   //Force scroll to top on render
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -27,7 +31,7 @@ function WishlistPage() {
     async function getProductsFromFirebase(user, wishlist) {
       setIsLoading(true);
       if (!user || wishlist.length === 0) {
-        setWishlistProducts([]);      
+        setWishlistProducts([]);
         setIsLoading(false);
         return;
       }
@@ -55,22 +59,44 @@ function WishlistPage() {
     }
 
     getProductsFromFirebase(user, wishlist);
-    
   }, [user, wishlist]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 dark:bg-slate-700 dark:text-slate-200">
+        <div>Loading...</div>
+      </section>
+    );
   }
 
   if (wishlistProducts.length === 0) {
-    return <div>No items!</div>;
+    return (
+      <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 dark:bg-slate-700 dark:text-slate-200">
+        <h1 className="mb-10 text-5xl">
+          Looks like you don't have any items in your wishlist yet.
+        </h1>
+      </section>
+    );
   }
 
   return (
-    <>
-      <div>WishlistPage</div>
-      <ul>{wishlistProducts.map(product => product.title)}</ul>
-    </>
+    <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 dark:bg-slate-700 dark:text-slate-200">
+      <h1 className="mb-10 text-5xl">My wishlist</h1>
+      <ul>
+        {wishlistProducts.map((product) => (
+          <WishlistItem
+            key={product.id}
+            id={product.id}
+            price={product.price}
+            title={product.title}
+            image={product.image}
+            description={product.description}
+            addItem = {addItem}
+            addOrRemoveWishlistItem = {addOrRemoveWishlistItem}
+          />
+        ))}
+      </ul>
+    </section>
   );
 }
 

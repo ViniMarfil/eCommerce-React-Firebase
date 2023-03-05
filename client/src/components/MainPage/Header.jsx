@@ -4,11 +4,11 @@ import { HiOutlineHeart } from "react-icons/hi";
 import { FiShoppingCart } from "react-icons/fi";
 import { VscAccount } from "react-icons/vsc";
 
-import CartContext from "../contexts/CartContext";
+import CartContext from "../../contexts/CartContext";
 
-import { DarkMode, Logo } from "./";
+import { DarkMode, Logo } from "..";
 import { Link } from "react-router-dom";
-import WishlistContext from "../contexts/WishlistContext";
+import WishlistContext from "../../contexts/WishlistContext";
 
 const Header = ({ theme, switchTheme }) => {
   const { cartQuantity, setIsCartActiveHandler } = useContext(CartContext);

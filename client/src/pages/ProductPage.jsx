@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProduct } from "../api/utils/Products";
 import CartContext from "../contexts/CartContext";
-import UserContext from "../contexts/UserContext";
 import WishlistContext from "../contexts/WishlistContext";
 
 function ProductPage() {

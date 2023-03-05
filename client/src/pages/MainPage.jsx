@@ -1,6 +1,5 @@
 import React from "react";
-import Hero from "../components/Hero";
-import { ProductSection } from "../components/index";
+import { Hero, ProductSection } from "../components/index";
 
 function MainPage({ products }) {
   return (
