@@ -1,9 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import CartContext from "../contexts/CartContext";
 
 function CheckoutPage() {
-  const { getCart } = useContext(CartContext);
-  const cart = getCart();
+  const { cart } = useContext(CartContext);
+
+  //Force scroll to top on render
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <ul>

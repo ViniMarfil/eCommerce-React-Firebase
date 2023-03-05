@@ -2,7 +2,12 @@ import React, { useContext, useEffect } from "react";
 import UserContext from "../../contexts/UserContext";
 
 function AccountSettings() {
-  const { user, signOutUser } = useContext(UserContext); 
+  const { user, signOutUser } = useContext(UserContext);
+
+  //Force scroll to top on render
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 text-2xl dark:bg-slate-700 dark:text-slate-200">

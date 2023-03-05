@@ -45,14 +45,15 @@ function CartDrawer() {
           );
         })}
       </ul>
-      <div className="flex">
-        <button
+      <div className="flex text-center">
+        <Link
+          to={"/checkout"}
           className="text-md m-4 w-full rounded bg-orange-600 px-8 py-3 text-white
          shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
-          onClick={() => console.log("Clicked!")}
+          onClick={() => setIsCartActiveHandler(false)}
         >
           Go to checkout
-        </button>
+        </Link>
       </div>
     </>
   );

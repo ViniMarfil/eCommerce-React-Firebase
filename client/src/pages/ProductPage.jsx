@@ -22,19 +22,17 @@ function ProductPage() {
       setIsLoading(false);
     }
     getProductDetails();
-    
-  }, []);
-  
-  //Force scroll to top on render
-  useEffect(() => {
-    window.scrollTo(0,0);   
   }, []);
 
-  
+  //Force scroll to top on render
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   function changeQuantity(amount) {
     let currentQuantity = quantity + amount;
 
-    if (currentQuantity < 0) currentQuantity = 0; 
+    if (currentQuantity < 0) currentQuantity = 0;
     if (currentQuantity > 9) currentQuantity = 9;
 
     setQuantity(currentQuantity);
