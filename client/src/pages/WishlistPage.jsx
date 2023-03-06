@@ -18,8 +18,7 @@ function WishlistPage() {
   const { wishlist, addOrRemoveWishlistItem } = useContext(WishlistContext);
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  console.log(wishlistProducts);
+  
   //Force scroll to top on render
   useEffect(() => {
     window.scrollTo(0, 0);

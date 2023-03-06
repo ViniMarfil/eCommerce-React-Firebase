@@ -12,7 +12,7 @@ function ProductPage() {
 
   const [product, setProduct] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     async function getProductDetails() {
@@ -32,7 +32,7 @@ function ProductPage() {
   function changeQuantity(amount) {
     let currentQuantity = quantity + amount;
 
-    if (currentQuantity < 0) currentQuantity = 0;
+    if (currentQuantity < 1) currentQuantity = 1;
     if (currentQuantity > 9) currentQuantity = 9;
 
     setQuantity(currentQuantity);
@@ -43,7 +43,7 @@ function ProductPage() {
       <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 dark:bg-slate-700 dark:text-slate-200">
         <div className="flex flex-col md:flex-row ">
           <img
-            className="max-h-[20rem] rounded object-contain transition hover:hover:scale-[1.01] md:max-h-[40rem]"
+            className="max-h-[20rem] rounded object-contain transition hover:hover:scale-[1.01] lg:max-h-[40rem]"
             src={product.image}
             alt={product.title}
           />
@@ -79,7 +79,7 @@ function ProductPage() {
                shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
                 onClick={() => {
                   addItem(id, quantity);
-                  setQuantity(0);
+                  setQuantity(1);
                 }}
               >
                 Add to cart
