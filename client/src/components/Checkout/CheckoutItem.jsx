@@ -38,7 +38,6 @@ function CheckoutItem({
 
           <div className="flex flex-col justify-center space-y-4 text-2xl">
             <div>
-              Total:{" "}
               <span className="font-semibold text-orange-500">
                 ${totalPrice.toFixed(2)}
               </span>

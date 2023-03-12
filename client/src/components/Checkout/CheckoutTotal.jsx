@@ -1,8 +1,8 @@
 import React from 'react'
 
-function CheckoutTotal() {
+function CheckoutTotal({totalSum}) {
   return (
-    <div>CheckoutTotal</div>
+    <div>{totalSum}</div>
   )
 }
 

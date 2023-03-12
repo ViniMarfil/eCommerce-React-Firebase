@@ -21,7 +21,7 @@ function CartDrawer() {
       </div>
       <div className="flex items-center justify-center">
         <Link
-          to=""
+          to="/"
           className=" text-md m-4 flex w-full items-center justify-center rounded bg-orange-600 px-8
          py-3 text-white shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
           onClick={() => setIsCartActiveHandler(false)}
