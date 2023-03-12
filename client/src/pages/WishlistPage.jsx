@@ -14,11 +14,11 @@ import WishlistContext from "../contexts/WishlistContext";
 
 function WishlistPage() {
   const { user } = useContext(UserContext);
-  const { addItem,  } = useContext(CartContext);
+  const { addItem } = useContext(CartContext);
   const { wishlist, addOrRemoveWishlistItem } = useContext(WishlistContext);
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   //Force scroll to top on render
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -90,8 +90,8 @@ function WishlistPage() {
             title={product.title}
             image={product.image}
             description={product.description}
-            addItem = {addItem}
-            addOrRemoveWishlistItem = {addOrRemoveWishlistItem}
+            addItem={addItem}
+            addOrRemoveWishlistItem={addOrRemoveWishlistItem}
           />
         ))}
       </ul>

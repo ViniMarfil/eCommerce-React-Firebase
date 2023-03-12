@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { CheckoutItem, CheckoutTotal } from "../components";
 import CartContext from "../contexts/CartContext";
 
 function CheckoutPage() {
@@ -10,16 +11,19 @@ function CheckoutPage() {
   }, []);
 
   return (
-    <ul>
-      {cart.map((item) => (
-        <li key={item.id}>
-          <div className="flex flex-col">
-            <h1 className="text-3xl">Item id: {item.id}</h1>
-            <h2>Quantity: {item.quantity}</h2>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <section className="flex min-h-[80vh] w-full flex-col items-center bg-slate-200 p-8 dark:bg-slate-700 dark:text-slate-200">
+      <h1 className="mb-10 text-5xl">Checkout</h1>
+      <ul>
+        {cart.map((item, index) => (
+          <CheckoutItem
+            key={item.productId}
+            productId={item.productId}
+            quantity={item.quantity}
+          />
+        ))}
+      </ul>
+      <CheckoutTotal />
+    </section>
   );
 }
 

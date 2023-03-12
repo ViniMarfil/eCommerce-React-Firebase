@@ -1,5 +1,13 @@
+import {
+  collection,
+  documentId,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import React, { createContext, useState, useEffect } from "react";
 import useLocalStorage from "use-local-storage";
+import { db } from "../api/firebase";
 
 export const CartContext = createContext(null);
 
@@ -9,7 +17,6 @@ export function CartContextProvider({ children }) {
   const [isCartDrawerActive, setIsCartDrawerActive] = useState(false);
 
   //TODO: merge cart and product
-
   /*
   useEffect(() => {
     localStorage.setItem('cartKey', JSON.stringify(cart));
@@ -34,7 +41,7 @@ export function CartContextProvider({ children }) {
       };
     }
     updateCartQuantity(currentCart);
-    setCart(currentCart);
+    setCart([...currentCart]);
   }
 
   function removeItem(itemId, quantity) {
@@ -46,9 +53,9 @@ export function CartContextProvider({ children }) {
     }
 
     let newQuantity = currentCart[itemIndex].quantity - quantity;
-    if(newQuantity <= 0){
+    if (newQuantity <= 0) {
       currentCart.splice(itemIndex, 1);
-    }else{
+    } else {
       currentCart[itemIndex] = {
         ...currentCart[itemIndex],
         quantity: newQuantity,
@@ -56,7 +63,7 @@ export function CartContextProvider({ children }) {
     }
 
     updateCartQuantity(currentCart);
-    setCart(currentCart);
+    setCart([...currentCart]);
   }
 
   function updateCartQuantity(currentCart) {

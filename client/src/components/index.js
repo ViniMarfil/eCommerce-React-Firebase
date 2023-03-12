@@ -8,4 +8,6 @@ export { default as ProductSection } from "./Products/ProductSection";
 export { default as AccountSettings } from "./AccountSettings/AccountSettings";
 export { default as SignInForms } from "./AccountSettings/SignInForms";
 export { default as CartDrawer } from "./CartDrawer";
-export {default as WishlistItem} from "./Wishlist/WishlistItem"
+export { default as WishlistItem } from "./Wishlist/WishlistItem";
+export { default as CheckoutItem } from "./Checkout/CheckoutItem";
+export { default as CheckoutTotal } from "./Checkout/CheckoutTotal";
