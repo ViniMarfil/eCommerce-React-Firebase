@@ -17,27 +17,16 @@ export function CartContextProvider({ children }) {
   const [cartQuantity, setCartQuantity] = useState(0);
   const [isCartDrawerActive, setIsCartDrawerActive] = useState(false);
 
-  //TODO: merge cart and product
+  //Cart only has productId and quantity
+  //So we need to get the full product info from firebase
+  //Don't think this is the cleanest solution, but it has to work
+  getProductsFromCartAndMerge(cart);
+
   /*
   useEffect(() => {
     localStorage.setItem('cartKey', JSON.stringify(cart));
   }, [cart]);  
   */
-
-  //Cart only has productId and quantity
-  //So we need to get the full product info from firebase
-  //Don't think this is the cleanest solution, but it has to work
-  useEffect(() => {
-    async function getProductsFromCartAndMerge(currentCart){
-      const firebaseProducts = await getProductsFromCart(currentCart);
-      const mergedCartAndProduct = mergeCartAndProduct(currentCart, firebaseProducts);
-      setFirebaseCart([...mergedCartAndProduct]);
-    }
-    getProductsFromCartAndMerge(cart);
-
-  }, [cart]);
-
-
   async function getProductsFromCart(currentCart) {
     if (currentCart.length === 0) return [];
     let productCart = [];
@@ -82,6 +71,11 @@ export function CartContextProvider({ children }) {
     return mergedCart;
   }
 
+  async function getProductsFromCartAndMerge(currentCart){
+    const firebaseProducts = await getProductsFromCart(currentCart);
+    const mergedCartAndProduct = mergeCartAndProduct(currentCart, firebaseProducts);
+    setFirebaseCart([...mergedCartAndProduct]);
+  }
   function setIsCartActiveHandler(newValue) {
     setIsCartDrawerActive(newValue);
   }

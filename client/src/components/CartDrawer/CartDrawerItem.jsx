@@ -1,40 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getProduct } from "../../api/utils/Products";
+import React, { useContext } from "react";
 import CartContext from "../../contexts/CartContext";
 
-function CartDrawerItem({ productId, quantity }) {
+function CartDrawerItem({ productId,
+  title,
+  quantity,
+  image,
+  description,
+  price}) {
   const { addItem, removeItem } = useContext(CartContext);
-  const [product, setProduct] = useState(null);
 
-  //Cart context only have the productId and quantity.
-  //So we need to fetch the item from firebase
-  useEffect(() => {
-    async function getProductFromFirebase() {
-      const firebaseProduct = await getProduct(productId);
-      if (firebaseProduct.success) {
-        setProduct(firebaseProduct.data);
-      }
-    }
-    getProductFromFirebase();
-  }, [productId]);
-
-  if (!product) {
+  if (!productId) {
     return <h1>Loading...</h1>;
   }
 
   let totalPrice = 0;
-  if (product.price > 0 && quantity > 0) {
-    totalPrice = product.price * quantity;
+  if (price > 0 && quantity > 0) {
+    totalPrice = price * quantity;
   }
   return (
     <>
       <li className="mb-6 mt-2 flex flex-col text-center">
-        <h1 className="mb-4 text-lg">{product.title}</h1>
+        <h1 className="mb-4 text-lg">{title}</h1>
         <div className="flex flex-row justify-center text-center">
           <div className="mr-4 w-[40%]">
             <img
-              src={product.image}
-              alt={product.title}
+              src={image}
+              alt={title}
               className="rounded-md object-scale-down"
             />
           </div>

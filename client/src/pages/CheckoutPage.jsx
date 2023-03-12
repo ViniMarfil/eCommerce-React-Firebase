@@ -4,7 +4,6 @@ import CartContext from "../contexts/CartContext";
 
 function CheckoutPage() {
   const { firebaseCart } = useContext(CartContext);
-  console.log(firebaseCart);
   //Force scroll to top on render
   useEffect(() => {
     window.scrollTo(0, 0);

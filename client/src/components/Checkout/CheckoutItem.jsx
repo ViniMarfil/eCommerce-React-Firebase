@@ -1,8 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getProduct } from "../../api/utils/Products";
+import React, { useContext } from "react";
 import CartContext from "../../contexts/CartContext";
 
-function CheckoutItem({ productId, title, quantity, image, description, price}) {
+function CheckoutItem({
+  productId,
+  title,
+  quantity,
+  image,
+  description,
+  price,
+}) {
   const { addItem, removeItem } = useContext(CartContext);
 
   if (!productId) {

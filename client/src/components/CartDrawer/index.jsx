@@ -5,7 +5,7 @@ import CartDrawerItem from "./CartDrawerItem";
 import { Link } from "react-router-dom";
 
 function CartDrawer() {
-  const { cart, isCartDrawerActive, setIsCartActiveHandler } =
+  const { firebaseCart, isCartDrawerActive, setIsCartActiveHandler } =
     useContext(CartContext);
   const background = (
     <div
@@ -35,12 +35,16 @@ function CartDrawer() {
   const cartIsNotNull = (
     <>
       <ul className="mt-8 flex flex-col p-4 dark:text-slate-200">
-        {cart.map((cartItem) => {
+        {firebaseCart.map((item) => {
           return (
             <CartDrawerItem
-              key={cartItem.productId}
-              productId={cartItem.productId}
-              quantity={cartItem.quantity}
+             key={item.productId}
+            productId={item.productId}
+            title={item.title}
+            quantity={item.quantity}
+            image={item.image}
+            description={item.description}
+            price={item.price}
             />
           );
         })}
@@ -73,7 +77,7 @@ function CartDrawer() {
         >
           <AiOutlineCloseCircle />
         </button>
-        {cart.length === 0 ? cartIsNull : cartIsNotNull}
+        {firebaseCart.length === 0 ? cartIsNull : cartIsNotNull}
       </div>
     </>
   );
