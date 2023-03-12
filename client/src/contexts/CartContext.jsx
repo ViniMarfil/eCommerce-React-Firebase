@@ -13,6 +13,7 @@ export const CartContext = createContext(null);
 
 export function CartContextProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const [firebaseCart, setFirebaseCart] = useState([]);
   const [cartQuantity, setCartQuantity] = useState(0);
   const [isCartDrawerActive, setIsCartDrawerActive] = useState(false);
 
@@ -22,6 +23,64 @@ export function CartContextProvider({ children }) {
     localStorage.setItem('cartKey', JSON.stringify(cart));
   }, [cart]);  
   */
+
+  //Cart only has productId and quantity
+  //So we need to get the full product info from firebase
+  //Don't think this is the cleanest solution, but it has to work
+  useEffect(() => {
+    async function getProductsFromCartAndMerge(currentCart){
+      const firebaseProducts = await getProductsFromCart(currentCart);
+      const mergedCartAndProduct = mergeCartAndProduct(currentCart, firebaseProducts);
+      setFirebaseCart([...mergedCartAndProduct]);
+    }
+    getProductsFromCartAndMerge(cart);
+
+  }, [cart]);
+
+
+  async function getProductsFromCart(currentCart) {
+    if (currentCart.length === 0) return [];
+    let productCart = [];
+    let firebaseCartProductId = currentCart.map((item) => item.productId);
+    //Firebase limits only 10 arrays in the "in" condition, so we need to loop
+    do {
+      let first10ProductId = firebaseCartProductId.splice(0, 10);
+
+      let q = query(
+        collection(db, "products"),
+        where(documentId(), "in", first10ProductId)
+      );
+
+      let querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc, index, array) => {
+        productCart.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+    } while (firebaseCartProductId.length > 0);
+    return productCart;
+  }
+
+  function mergeCartAndProduct(currentCart, firebaseProducts) {
+    if (currentCart.length === 0) return [];
+    let mergedCart = [];
+    let foundCartItem;
+    firebaseProducts.forEach((productItem) => {
+      foundCartItem = currentCart.find(
+        (cartItem) => cartItem.productId === productItem.id
+      );
+      mergedCart.push({
+        image: productItem.image,
+        description: productItem.description,
+        price: productItem.price,
+        title: productItem.title,
+        ...foundCartItem,
+      });
+    });
+    return mergedCart;
+  }
 
   function setIsCartActiveHandler(newValue) {
     setIsCartDrawerActive(newValue);
@@ -82,6 +141,7 @@ export function CartContextProvider({ children }) {
     removeItem,
     isCartDrawerActive,
     setIsCartActiveHandler,
+    firebaseCart
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
