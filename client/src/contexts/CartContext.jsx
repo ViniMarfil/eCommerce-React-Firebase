@@ -20,7 +20,17 @@ export function CartContextProvider({ children }) {
   //Cart only has productId and quantity
   //So we need to get the full product info from firebase
   //Don't think this is the cleanest solution, but it has to work
-  getProductsFromCartAndMerge(cart);
+  useEffect(() => {
+    async function getProductsFromCartAndMerge(currentCart) {
+      const firebaseProducts = await getProductsFromCart(currentCart);
+      const mergedCartAndProduct = mergeCartAndProduct(
+        currentCart,
+        firebaseProducts
+      );
+      setFirebaseCart([...mergedCartAndProduct]);
+    }
+    getProductsFromCartAndMerge(cart);
+  }, [cart]);
 
   /*
   useEffect(() => {
@@ -71,11 +81,6 @@ export function CartContextProvider({ children }) {
     return mergedCart;
   }
 
-  async function getProductsFromCartAndMerge(currentCart){
-    const firebaseProducts = await getProductsFromCart(currentCart);
-    const mergedCartAndProduct = mergeCartAndProduct(currentCart, firebaseProducts);
-    setFirebaseCart([...mergedCartAndProduct]);
-  }
   function setIsCartActiveHandler(newValue) {
     setIsCartDrawerActive(newValue);
   }
@@ -135,7 +140,7 @@ export function CartContextProvider({ children }) {
     removeItem,
     isCartDrawerActive,
     setIsCartActiveHandler,
-    firebaseCart
+    firebaseCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
