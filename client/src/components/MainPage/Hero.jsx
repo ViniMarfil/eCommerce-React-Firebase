@@ -18,8 +18,7 @@ const Hero = () => {
           </h1>
 
           <h2 className="mt-4 max-w-lg md:text-xl md:leading-relaxed">
-            Gragas gragas gragas gragas gragas gragas gragas gragas gragas
-            gragas
+            Find out what is the best outfit for your style.
           </h2>
 
           <div className="mt-8 flex flex-wrap gap-4 text-center">

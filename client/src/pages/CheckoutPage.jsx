@@ -65,7 +65,7 @@ function CheckoutPage() {
         <button
           className="text-md my-1 w-full whitespace-nowrap rounded bg-orange-600 px-8 py-3 text-2xl font-medium text-white
                shadow hover:bg-orange-700 focus:outline-none active:bg-orange-500"
-          onClick={() => console.log("Click")}
+          onClick={() => window.alert("Thanks for testing! Feel free to leave any feedback!")}
         >
           Complete the fictitious purchase
         </button>

@@ -12,10 +12,12 @@ import { db } from "../api/firebase";
 export const CartContext = createContext(null);
 
 export function CartContextProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useLocalStorage("cartKey", []);
   const [firebaseCart, setFirebaseCart] = useState([]);
-  const [cartQuantity, setCartQuantity] = useState(0);
   const [isCartDrawerActive, setIsCartDrawerActive] = useState(false);
+  
+  let cartQuantity = updateCartQuantity(cart);
+  
 
   //Cart only has productId and quantity
   //So we need to get the full product info from firebase
@@ -32,11 +34,6 @@ export function CartContextProvider({ children }) {
     getProductsFromCartAndMerge(cart);
   }, [cart]);
 
-  /*
-  useEffect(() => {
-    localStorage.setItem('cartKey', JSON.stringify(cart));
-  }, [cart]);  
-  */
   async function getProductsFromCart(currentCart) {
     if (currentCart.length === 0) return [];
     let productCart = [];
@@ -98,7 +95,6 @@ export function CartContextProvider({ children }) {
         quantity: newQuantity,
       };
     }
-    updateCartQuantity(currentCart);
     setCart([...currentCart]);
   }
 
@@ -119,8 +115,6 @@ export function CartContextProvider({ children }) {
         quantity: newQuantity,
       };
     }
-
-    updateCartQuantity(currentCart);
     setCart([...currentCart]);
   }
 
@@ -130,7 +124,7 @@ export function CartContextProvider({ children }) {
     currentCart.forEach((item) => {
       currentQuantity += item.quantity;
     });
-    setCartQuantity(currentQuantity);
+    return currentQuantity;
   }
 
   const value = {
