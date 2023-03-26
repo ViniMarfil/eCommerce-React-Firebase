@@ -22,7 +22,7 @@ function ProductPage() {
       setIsLoading(false);
     }
     getProductDetails();
-  }, []);
+  }, [id]);
 
   //Force scroll to top on render
   useEffect(() => {
