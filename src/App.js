@@ -19,8 +19,9 @@ import { UserContextProvider } from "./contexts/UserContext";
 import { WishlistContextProvider } from "./contexts/WishlistContext";
 
 function App() {
-  const [theme, setTheme] = useLocalStorage("theme" ? "dark" : "light");
+  const [theme, setTheme] = useLocalStorage("theme", "theme" ? "dark" : "light");
   const [popularProducts, setPopularProducts] = useState([]);
+  console.log(theme);
 
   function switchTheme() {
     const newTheme = theme === "light" ? "dark" : "light";
