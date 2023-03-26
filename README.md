@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# eCommerce template with React, Firebase and Tailwind
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About
+This is a project that I made from scratch to learn and test my knowledge about those three features.
 
-## Available Scripts
+## Features
+1. Fully responsive site that works either with a mobile device or with a desktop
+2. User sign and log in, either through the app, or through Google Authenticate
+3. Dark mode and light mode, based on the user's preference
+4. Use of local storage for the cart items
+5. use of firebase for the cart wishlist
 
-In the project directory, you can run:
+Not all features were implemented, there's some buttons that are visual only and the search engine does not work, since they were not the scope of this project.
 
-### `yarn start`
+## Technologies used
+1. React for the frontend
+2. Firebase as a Backend-as-a-Service
+3. Tailwind for the faster and easier styling
+4. Yarn as the package manager
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Things that I would improve about this project
+### 1. Using a Meta Framework
+Any would make the app faster and the development of the backend part much easier. To be fair, I already have the basics of the Next.js and I could've used it, but since Next.js 13 has just been announced - with a complete different way of using it - and I already had enough in my plate, I decided to not use it.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 2. Using TypeScript
+Same as the above, would make the development easier (and its not THAT hard to implement) but I already had enough things going on. If I could the first thing I would do is say goodbye to JavaScript.
 
-### `yarn test`
+### 3. Creating more reusable Styled Components
+I had to copy and paste WAY too many buttons, breaking the DRY principle and making the development harder. I could've made a set of beautiful cards, buttons and reutilized then over the course of the project. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 4. Learning more about the Firebase
+I don't think I implemented the Firebase API in a good way, a meta framework would help, but I had a LOT of trouble with racing conditions. 
 
-### `yarn build`
+### 5. Making the project structure more organized
+The project structure is ugly. I know. I tested a bunch of stuff, and right know its so convoluted that it makes the project way more confusing than it should be.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Why I am not going to improve _this_ project with the ideas above
+The best way to learn about something is doing it. I would not have learned how good TypeScript is at protecting myself from using the wrong props, I would not have learned how MUCH reusing styled components make the coding more fun or how important is a good and organized project structure.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+All those ugly mistakes helped me learn about them. I could improve my project, but them I would find more mistakes, then list them again... and then repeat the same cycle. So instead, I am going to save this project as a _snapshot_ of my career, as a reminder for my future self, a reminder about how much I've grown as a developer.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+>"Art is never finished only abandoned" - Leonardo da Vinci
 
-### `yarn eject`
+## About you, and how to contact me
+Thank you for reading this!
+Any questions, suggestions and congratulations are welcome.
+This is my email: viniciusmarfil@gmail.com
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Installing
+Simply download or clone the project, then use `yarn install` to install the dependencies then `yarn start` to start the project.
