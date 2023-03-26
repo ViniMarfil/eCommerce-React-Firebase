@@ -1,3 +1,5 @@
+## Checkout the live version! : https://vinivini-store.netlify.app/
+
 # eCommerce template with React, Firebase and Tailwind
 
 ## About
