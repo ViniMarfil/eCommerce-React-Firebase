@@ -17,6 +17,7 @@ Not all features were implemented, there's some buttons that are visual only and
 2. Firebase as a Backend-as-a-Service
 3. Tailwind for the faster and easier styling
 4. Yarn as the package manager
+5. Fake Store API for easier testing. https://fakestoreapi.com/
 
 ## Things that I would improve about this project
 ### 1. Using a Meta Framework
